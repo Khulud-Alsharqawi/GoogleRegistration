@@ -2,6 +2,8 @@ package com.example.googleregistration
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.PasswordTransformationMethod
 import android.widget.Toast
 import com.example.googleregistration.databinding.ActivityMainBinding
 
@@ -12,38 +14,60 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.next.setOnClickListener { registration() }
+
+        binding.showpass.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                binding.passwordInput.transformationMethod = HideReturnsTransformationMethod.getInstance()
+                binding.confirmInput.transformationMethod = HideReturnsTransformationMethod.getInstance()
+            } else {
+                binding.passwordInput.transformationMethod = PasswordTransformationMethod.getInstance()
+                binding.confirmInput.transformationMethod =  PasswordTransformationMethod.getInstance()
+
+            }
+        }
     }
 
 
     private fun registration() {
+
+
         val firstName = binding.firstNameInput.text.toString()
         val lastName = binding.lastNameInput.text.toString()
         val email = binding.userNameInput.text.toString()
         val password = binding.passwordInput.text.toString()
         val confirm = binding.confirmInput.text.toString()
 
-        if (firstName.isNotEmpty() && lastName.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty() && confirm.isNotEmpty()) {
-            if (email.contains('!') || email.contains('@')||email.contains(' ') || email.contains('#')
-                || email.contains('$')||email.contains('%') || email.contains('^')
-                || email.contains('&')||email.contains('*') || email.contains('?')
-                || email.contains('>')||email.contains('-') || email.contains('_') ){
-              //  binding.result.setText("Please Enter User Name Without Symbol or spaces")
-                Toast.makeText(this, "Please Enter User Name Without Symbol or spaces", Toast.LENGTH_SHORT).show()
+
+            if (firstName.isNotEmpty() && lastName.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty() && confirm.isNotEmpty()) {
+                if (email.contains('!') || email.contains('@') || email.contains(' ') || email.contains(
+                        '#'
+                    )
+                    || email.contains('$') || email.contains('%') || email.contains('^')
+                    || email.contains('&') || email.contains('*') || email.contains('?')
+                    || email.contains('>') || email.contains('-') || email.contains('_')
+                ) {
+                    //  binding.result.setText("Please Enter User Name Without Symbol or spaces")
+                    Toast.makeText(
+                        this,
+                        "Please Enter User Name Without Symbol or spaces",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                } else if (password == confirm) {
+                    binding.result.setText("Hi ${firstName}@gmail.com you register successfully")
+
+                } else {
+                    Toast.makeText(this, "Password Missmatch", Toast.LENGTH_SHORT).show()
+                    //   binding.result.setText("Password Missmatch")
+                }
+
+            } else { Toast.makeText(this, "Please full all blanks", Toast.LENGTH_SHORT).show()
 
             }
-           else if (password == confirm  ) {
-                binding.result.setText("Hi ${firstName}@gmail.com you register successfully")
 
-            } else {
-                Toast.makeText(this, "Password Missmatch", Toast.LENGTH_SHORT).show()
-                 //   binding.result.setText("Password Missmatch")
-            }
 
-        } else {
-            Toast.makeText(this, "Please full all blanks", Toast.LENGTH_SHORT).show()
+
 
         }
-
     }
-}
 
